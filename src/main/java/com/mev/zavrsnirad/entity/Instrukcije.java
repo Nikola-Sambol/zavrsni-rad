@@ -14,8 +14,8 @@ public class Instrukcije {
     @Column(name="opis", columnDefinition="TEXT")
     private String opis;
 
-    @OneToOne(mappedBy="instrukcija", cascade = CascadeType.ALL)
-    private Recept recept;
+    @OneToOne(mappedBy="instrukcija")
+    private Komponente komponente;
 
     public Instrukcije() {
 
@@ -41,12 +41,12 @@ public class Instrukcije {
         this.opis = opis;
     }
 
-    public Recept getRecept() {
-        return recept;
+    public Komponente getKomponente() {
+        return komponente;
     }
 
-    public void setRecept(Recept recept) {
-        this.recept = recept;
+    public void setKomponente(Komponente komponente) {
+        this.komponente = komponente;
     }
 
     @Override

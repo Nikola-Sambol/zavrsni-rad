@@ -14,8 +14,11 @@ public class Sastav {
     @Column(name="opis", columnDefinition="TEXT")
     private String opis;
 
-    @OneToOne(mappedBy="sastav", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy="sastav")
     private Recept recept;
+
+    @OneToOne(mappedBy = "sastav")
+    private Komponente komponente;
 
     public Sastav() {
 
@@ -47,6 +50,14 @@ public class Sastav {
 
     public void setRecept(Recept recept) {
         this.recept = recept;
+    }
+
+    public Komponente getKomponente() {
+        return komponente;
+    }
+
+    public void setKomponente(Komponente komponente) {
+        this.komponente = komponente;
     }
 
     @Override

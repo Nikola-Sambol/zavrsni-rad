@@ -3,6 +3,8 @@ package com.mev.zavrsnirad.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="recepti")
@@ -13,47 +15,49 @@ public class Recept {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="naziv")
+    @Column(name="naziv", columnDefinition="TEXT")
     private String nazivRecepta;
 
     @Column(name="datum_kreiranja", updatable = false, insertable = false)
     private LocalDate kreirano;
 
-    @Column(name="putanja_slika")
+    @Column(name="putanja_slika", columnDefinition="TEXT")
     private String putanjaSlike;
 
-    @Column(name="putanja_video")
+    @Column(name="putanja_video", columnDefinition="TEXT")
     private String putanjaVideo;
+
+    @Column(name="vrijeme_pripreme", columnDefinition="TEXT")
+    private String vrijemePripreme;
 
     @ManyToOne
     @JoinColumn(name="korisnik_id")
     private Korisnik korisnik;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="sastav_id", unique = true)
     private Sastav sastav;
 
-    @OneToOne
-    @JoinColumn(name="instrukcija_id", unique = true)
-    private Instrukcije instrukcija;
+    @OneToMany(mappedBy = "recept")
+    private List<Komponente> komponente;
 
     @ManyToOne
     @JoinColumn(name="kategorija_id", nullable = false)
     private Kategorija kategorija;
 
+
     public Recept() {
 
     }
 
-    public Recept(String nazivRecepta, LocalDate kreirano, String putanjaSlike, String putanjaVideo,
-                  Korisnik korisnik, Sastav sastav, Instrukcije instrukcija, Kategorija kategorija) {
+    public Recept(String nazivRecepta, String putanjaSlike, String putanjaVideo,
+                  String vrijemePripreme, Korisnik korisnik, Sastav sastav, Kategorija kategorija) {
         this.nazivRecepta = nazivRecepta;
-        this.kreirano = kreirano;
         this.putanjaSlike = putanjaSlike;
         this.putanjaVideo = putanjaVideo;
+        this.vrijemePripreme = vrijemePripreme;
         this.korisnik = korisnik;
         this.sastav = sastav;
-        this.instrukcija = instrukcija;
         this.kategorija = kategorija;
     }
 
@@ -97,14 +101,6 @@ public class Recept {
         this.sastav = sastav;
     }
 
-    public Instrukcije getInstrukcija() {
-        return instrukcija;
-    }
-
-    public void setInstrukcija(Instrukcije instrukcija) {
-        this.instrukcija = instrukcija;
-    }
-
     public String getPutanjaSlike() {
         return putanjaSlike;
     }
@@ -121,12 +117,43 @@ public class Recept {
         this.putanjaVideo = putanjaVideo;
     }
 
+    public String getVrijemePripreme() {
+        return vrijemePripreme;
+    }
+
+    public void setVrijemePripreme(String vrijemePripreme) {
+        this.vrijemePripreme = vrijemePripreme;
+    }
+
+    public List<Komponente> getKomponente() {
+        return komponente;
+    }
+
+    public void setKomponente(List<Komponente> komponente) {
+        this.komponente = komponente;
+    }
+
     public Kategorija getKategorija() {
         return kategorija;
     }
 
     public void setKategorija(Kategorija kategorija) {
         this.kategorija = kategorija;
+    }
+
+    public void addKomponenta(Komponente komponenta) {
+        if (komponente == null) {
+            komponente = new ArrayList<>();
+        }
+        komponente.add(komponenta);
+        komponenta.setRecept(this);
+    }
+
+    public void removeKomponenta(Komponente komponenta) {
+        if (komponente != null) {
+            komponente.remove(komponenta);
+            komponenta.setRecept(null);
+        }
     }
 
     @Override

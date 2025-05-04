@@ -3,6 +3,7 @@ package com.mev.zavrsnirad.entity;
 import com.mev.zavrsnirad.enums.Uloga;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,19 +15,20 @@ public class Korisnik {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="ime")
+    @Column(name="ime", columnDefinition="TEXT")
     private String ime;
 
-    @Column(name="prezime")
+    @Column(name="prezime", columnDefinition="TEXT")
     private String prezime;
 
-    @Column(name="email")
+    @Column(name="email", columnDefinition="TEXT")
     private String email;
 
-    @Column(name="lozinka")
+    @Column(name="lozinka", columnDefinition="TEXT")
     private String lozinka;
 
     @Column(name="uloga")
+    @Enumerated(EnumType.STRING)
     private Uloga uloga;
 
     @OneToMany(mappedBy="korisnik", cascade=CascadeType.ALL)
@@ -99,6 +101,22 @@ public class Korisnik {
     public void setRecepti(List<Recept> recepti) {
         this.recepti = recepti;
     }
+
+    public void addRecept(Recept recept) {
+        if (recepti == null) {
+            recepti = new ArrayList<>();
+        }
+        recepti.add(recept);
+        recept.setKorisnik(this);
+    }
+
+    public void removeRecept(Recept recept) {
+        if (recepti != null) {
+            recepti.remove(recept);
+            recept.setKorisnik(null);
+        }
+    }
+
 
     @Override
     public String toString() {

@@ -42,7 +42,7 @@ public class Recept {
     private List<Komponente> komponente;
 
     @ManyToOne
-    @JoinColumn(name="kategorija_id", nullable = false)
+    @JoinColumn(name="kategorija_id")
     private Kategorija kategorija;
 
 
